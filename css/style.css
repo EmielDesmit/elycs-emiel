@@ -324,3 +324,6 @@ video { display: block; width: 100%; height: auto; background: #111; }
 .common-grid figure:last-child video { aspect-ratio: 4 / 3; }
 .video-row video { flex: 0 0 auto; width: 340px; aspect-ratio: 3 / 4; object-fit: cover; scroll-snap-align: start; }
 @media (max-width: 800px) { .video-row video { width: 70vw; } }
+
+/* Auto-scrolling carousel */
+.carousel.auto { scroll-snap-type: none; scroll-behavior: auto; }

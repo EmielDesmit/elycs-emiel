@@ -32,3 +32,54 @@ if ('IntersectionObserver' in window) {
   }, { rootMargin: '200px' });
   vids.forEach((v) => { v.removeAttribute('autoplay'); v.pause(); io.observe(v); });
 }
+
+// Slow auto-scroll for carousels marked data-autoscroll.
+// Loops seamlessly, pauses on hover/touch/drag, resumes after a few seconds.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.querySelectorAll('.carousel[data-autoscroll]').forEach((el) => {
+  if (reduceMotion) return;
+  const SPEED = 35; // pixels per second
+  // Duplicate the slides so the loop has no visible jump.
+  Array.from(el.children).forEach((c) => {
+    const clone = c.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.alt = '';
+    el.appendChild(clone);
+  });
+  el.classList.add('auto');
+
+  let pos = el.scrollLeft, last = null, paused = false, resumeTimer = null, visible = false;
+  const loopWidth = () => el.scrollWidth / 2;
+
+  const pause = () => { paused = true; clearTimeout(resumeTimer); };
+  const resumeLater = (ms = 2500) => {
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => { pos = el.scrollLeft; paused = false; }, ms);
+  };
+  el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') pause(); });
+  el.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') resumeLater(800); });
+  el.addEventListener('pointerdown', pause);
+  el.addEventListener('touchstart', pause, { passive: true });
+  el.addEventListener('touchend', () => resumeLater(), { passive: true });
+  el.addEventListener('wheel', () => { pause(); resumeLater(); }, { passive: true });
+  // Keep manual scrolling inside the loop too.
+  el.addEventListener('scroll', () => {
+    if (!paused) return;
+    const w = loopWidth();
+    if (el.scrollLeft >= w) el.scrollLeft -= w;
+  }, { passive: true });
+
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(el);
+
+  const step = (t) => {
+    if (last !== null && !paused && visible) {
+      pos += SPEED * (t - last) / 1000;
+      const w = loopWidth();
+      if (pos >= w) pos -= w;
+      el.scrollLeft = pos;
+    }
+    last = t;
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+});
