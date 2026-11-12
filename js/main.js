@@ -20,3 +20,15 @@ document.querySelectorAll('.carousel').forEach((el) => {
   });
   el.addEventListener('click', (e) => { if (moved) e.preventDefault(); }, true);
 });
+
+// Only play videos while they are on screen (saves data and battery).
+const vids = document.querySelectorAll('video[autoplay]');
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) e.target.play().catch(() => {});
+      else e.target.pause();
+    });
+  }, { rootMargin: '200px' });
+  vids.forEach((v) => { v.removeAttribute('autoplay'); v.pause(); io.observe(v); });
+}

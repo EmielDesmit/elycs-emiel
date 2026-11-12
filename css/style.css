@@ -298,3 +298,13 @@ figcaption.karla { font-family: var(--font-body); font-weight: 400; }
   .contact-row .label { width: 110px; font-size: 15px; }
   .contact-row .value { font-size: 17px; word-break: break-word; }
 }
+
+/* Videos */
+video { display: block; width: 100%; height: auto; background: #111; }
+.card a.thumb video { transition: transform .4s, filter .4s; }
+.card a.thumb:hover video { transform: scale(1.03); filter: brightness(1.1); }
+.collage .stack video.back { position: absolute; left: 11%; top: 0; width: 59%; aspect-ratio: 3 / 4; object-fit: cover; }
+.common-grid video { aspect-ratio: 3 / 4; object-fit: cover; }
+.common-grid figure:last-child video { aspect-ratio: 4 / 3; }
+.video-row video { flex: 0 0 auto; width: 340px; aspect-ratio: 3 / 4; object-fit: cover; scroll-snap-align: start; }
+@media (max-width: 800px) { .video-row video { width: 70vw; } }
