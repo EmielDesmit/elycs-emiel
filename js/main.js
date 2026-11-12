@@ -34,7 +34,7 @@ if ('IntersectionObserver' in window) {
 }
 
 // Slow auto-scroll for carousels marked data-autoscroll.
-// Loops seamlessly, pauses on hover/touch/drag, resumes after a few seconds.
+// Loops seamlessly, pauses while someone drags/touches it, resumes after a few seconds.
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.querySelectorAll('.carousel[data-autoscroll]').forEach((el) => {
   if (reduceMotion) return;
@@ -56,12 +56,15 @@ document.querySelectorAll('.carousel[data-autoscroll]').forEach((el) => {
     clearTimeout(resumeTimer);
     resumeTimer = setTimeout(() => { pos = el.scrollLeft; paused = false; }, ms);
   };
-  el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') pause(); });
-  el.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') resumeLater(800); });
+  // Pause only when someone actually interacts (drag, touch, horizontal scroll),
+  // not when the mouse just rests on it while scrolling the page.
   el.addEventListener('pointerdown', pause);
+  window.addEventListener('pointerup', () => { if (paused) resumeLater(); });
   el.addEventListener('touchstart', pause, { passive: true });
   el.addEventListener('touchend', () => resumeLater(), { passive: true });
-  el.addEventListener('wheel', () => { pause(); resumeLater(); }, { passive: true });
+  el.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { pause(); resumeLater(); }
+  }, { passive: true });
   // Keep manual scrolling inside the loop too.
   el.addEventListener('scroll', () => {
     if (!paused) return;
