@@ -71,8 +71,8 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Project cards ---------- */
 .cards {
   display: grid;
-  grid-template-columns: 325fr 475fr 455fr;
-  gap: 0 110px;
+  grid-template-columns: 410fr 445fr 425fr;   /* was 325fr 475fr 455fr */
+  gap: 0 60px;                                 /* was 0 110px */
   align-items: end;
   padding: 50px 45px 0;
 }
@@ -83,12 +83,13 @@ a { color: inherit; text-decoration: none; }
   margin-top: 16px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: flex-end;     /* "view more" onderaan, op de regel van de laatste p */
+  gap: 24px;                 /* was 12px */
 }
 .card h3, .project-title h3 { font-weight: 700; font-size: 32px; line-height: 1.2; }
 .card p, .project-title p { font-size: 20px; margin-top: 4px; }
 .card p + p, .project-title p + p { margin-top: 24px; }
+.card h3, .card p { white-space: nowrap; }   /* titel en regels blijven op één lijn */
 .view-more { color: var(--accent); font-size: 18px; white-space: nowrap; padding-bottom: 4px; }
 .view-more:hover { text-decoration: underline; }
 
@@ -260,6 +261,9 @@ figcaption.karla { font-family: var(--font-body); font-weight: 400; }
 @media (max-width: 1200px) {
   :root { --pad: 48px; }
   .cards { gap: 0 40px; padding: 40px 24px 0; }
+  .card h3 { font-size: 26px; }
+  .card p { font-size: 17px; }
+  .view-more { font-size: 16px; }
   .project { padding: 0 24px; }
   .text-row, .media-row, .visual-row, .artist-media { gap: 32px; }
   .bio-grid { grid-template-columns: 300px 1fr; }
@@ -277,6 +281,7 @@ figcaption.karla { font-family: var(--font-body); font-weight: 400; }
   .hero h1, .section-head, .page-intro h1 { font-size: 32px; }
   .cards { grid-template-columns: 1fr; gap: 48px; }
   .card h3, .project-title h3 { font-size: 26px; }
+  .card h3, .card p { white-space: normal; }
   .text-row, .visual-row, .artist-intro, .artist-media, .common-grid { grid-template-columns: 1fr; }
   .media-row { flex-direction: column; }
   .collage { grid-template-columns: 1fr; gap: 24px; }
