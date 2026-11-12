@@ -71,7 +71,7 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Project cards ---------- */
 .cards {
   display: grid;
-  grid-template-columns: 430fr 445fr 425fr;   /* was 325fr 475fr 455fr */
+  grid-template-columns: minmax(0, 430fr) minmax(0, 435fr) minmax(0, 435fr);   /* minmax(0,…) stops long nowrap text from stretching a column */
   gap: 0 min(60px, 3.5vw);                     /* was 0 110px */
   align-items: end;
   padding: 50px 45px 0;
@@ -168,6 +168,8 @@ figcaption.karla { font-family: var(--font-body); font-weight: 400; }
 .common-grid .posters { grid-row: span 1; }
 .common-grid .tall { align-self: start; }
 .visual-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 110px; margin-top: 40px; }
+.visual-row.single { grid-template-columns: minmax(0, 420px); justify-content: center; }
+.visual-row video { aspect-ratio: 9 / 16; object-fit: cover; }
 .wide { margin-top: 40px; }
 
 /* Artist release */
@@ -308,6 +310,14 @@ figcaption.karla { font-family: var(--font-body); font-weight: 400; }
 /* Videos */
 video { display: block; width: 100%; height: auto; background: #111; }
 .card a.thumb video { transition: transform .4s, filter .4s; }
+/* Middle video + right photo: same width, same ratio => same height and same top edge */
+.card:nth-child(2) a.thumb video,
+.card:nth-child(3) a.thumb img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 7;
+  object-fit: cover;
+}
 .card a.thumb:hover video { transform: scale(1.03); filter: brightness(1.1); }
 .collage .stack video.back { position: absolute; left: 11%; top: 0; width: 59%; aspect-ratio: 3 / 4; object-fit: cover; }
 .common-grid video { aspect-ratio: 3 / 4; object-fit: cover; }
